@@ -34,6 +34,9 @@ get_values([], []).
 get_values([_-Value|Tail1], [Value|Tail2]) :-
         get_values(Tail1, Tail2).
 
+zip([], [], []).
+zip([X|Xs], [Y|Ys], [X-Y|Zs]) :- zip(Xs,Ys,Zs).
+
 map_char_to_num(I, O) :- 
     (
         \+is_list(I) ->
@@ -67,7 +70,7 @@ isEqual(X, Y) :- X == Y.
 get_matches(Clue, Words, Match) :-
     maplist(map_char_to_num, Words, Codes),
     map_char_to_num(Clue, ClueCode),
-    include(isEqual(ClueCode), Codes, CodeMatches),
+    once(include(isEqual(ClueCode), Codes, CodeMatches)),
     nth0(0, CodeMatches, CodeMatch),
     nth0(CodeIndex, Codes, CodeMatch),
     nth0(CodeIndex, Words, Match).
@@ -85,14 +88,14 @@ main :-
     get_matches(AC, Animals, AniMatch),
     get_matches(MC, Minerals, MinMatch),
 
-    writeln([VegMatch, AniMatch, MinMatch]). 
-
-    
-    
-
-    
-
-    
-
-
-
+    spell(VegMatch, VegMatchSpell),
+    spell(VC, VCC),
+    zip(VegMatchSpell, VCC, VegMap),
+    spell(AniMatch, AniMatchSpell),
+    spell(AC, ACC),
+    zip(AniMatchSpell, ACC, AniMap),
+    spell(MinMatch, MinMatchSpell),
+    spell(MC, MCC),
+    zip(MinMatchSpell, MCC, MinMap),
+    flatten([VegMap, AniMap, MinMap], CharMap),
+    writeln(CharMap).
