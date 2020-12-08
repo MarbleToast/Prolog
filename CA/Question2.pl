@@ -1,6 +1,8 @@
 /*
 Each number from 1 to 9 represents a different letter.   
 Solve the clues and insert the letters in the appropriate squares to discover a word which uses all nine letters.
+
+Using SWI-Prolog to compute.
 */
 
 % Question 2.1
@@ -13,22 +15,21 @@ divide_list(L, A, B) :-
     length(A, N),
     length(B, N).
 
-% A four-digit number with different positive digits and with the numbers represented by its last two digits a multiple of the number represented by its first two digits, is called a PAR.
-% Cannot use zero in a PAR. Therefore, smallest possible search range is 1234.
 par(N):-
     atom_chars(N, Nc),
-    length(Nc, 4), !,
-    unique(Nc), !,
+    length(Nc, 4),
+    unique(Nc),
     \+ member('0', Nc),
     divide_list(Nc, H, T),
-    atomic_list_concat(H, Ha),
+    atom_chars(Ha, H),
     atom_number(Ha, Hi),
-    atomic_list_concat(T, Ta),
+    atom_chars(Ta, T),
     atom_number(Ta, Ti),
     0 is Hi mod Ti.
     
+% Question 2.2
 pars(PARS):- 
-    numlist(1234, 9999, I),
+    numlist(1234, 9876, I),
     include(par, I, PARS).
     
 party(P1, P2) :-
